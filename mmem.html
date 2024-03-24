@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generate Personalized Flyer</title>
+    <style>
+        .avatar-container {
+            position: relative;
+            width: 300px;
+            height: 500px;
+            margin: auto;
+        }
+        
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar {
+            position: absolute;
+            left: 10px;
+            top: 50px;
+            border: 5px solid white;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-12">
+            <div class="contact-form-area">
+                <h3 class="text-center">GENERATE PERSONALIZED FLYER</h3>
+                <div class="row">
+                    <div class="avatar-container" id="target">
+                        <img src="img/IMG-20240324-WA0005.jpg" width="300px" height="300px" />
+                        <img src="" class="avatar" id="avatarImg" />
+                    </div>
+                    <input type="file" name="userImage" class="form-control mt-3 userImage" id="userImage" accept="image/*" onchange="readURL(this)" />
+                    <span class="display"></span>
+                    <button class="btn" name="submit" onclick="snapshot()">
+              Download Flyer
+            </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <canvas class="imageCanvas myCanvas" id="myCanvas" style="display: none"></canvas>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("avatarImg").src = e.target.result;
+                    document.querySelector(".avatar").style.display = "block"; // Show the avatar image
+                    document.querySelector('button[name="submit"]').style.display =
+                        "block"; // Show the download button
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function snapshot() {
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+
+            // Set canvas size to match the background image size
+            canvas.width = 300;
+            canvas.height = 500;
+
+            var backgroundImg = document.querySelector(
+                ".avatar-container img:first-child"
+            );
+            var avatarImg = document.getElementById("avatarImg");
+
+            // Draw the background image
+            ctx.drawImage(backgroundImg, 0, 0, 300, 300);
+
+            // Draw the avatar image on top of the background image
+            ctx.drawImage(avatarImg, 10, 50, 120, 120);
+
+            // Create a download link and trigger the download
+            var downloadLink = document.createElement("a");
+            downloadLink.href = canvas.toDataURL();
+            downloadLink.download = "personalized-flyer.png";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+    </script>
+</body>
+
+</html>
